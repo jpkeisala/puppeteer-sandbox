@@ -1,8 +1,7 @@
 const { expect } = require('chai')
 const puppeteer = require('puppeteer')
-const { click } = require('../lib/helpers')
-const  { getCount }= require('../lib/helpers')
-const {getText} = require('../lib/helpers')
+const { click, getCount, getText, shouldNotExist } = require('../lib/helpers')
+
 
 describe('My First Puppeteer Test', ()  => {
     let browser
@@ -27,14 +26,20 @@ describe('My First Puppeteer Test', ()  => {
 
     it('should launch the browser', async function() {    
         await page.goto('http://example.com/')
-        await page.waitForTimeout(1000)
-        await page.waitForSelector('h1')
         await page.waitForXPath('//h1')
-
+        
         const text = await getText(page, 'h1')
         const count = await getCount(page, 'p')
+        
         expect(text).to.be.a('string', 'Example domain')
         expect(count).to.be.equal(2)
+
+        //await page.waitForTimeout(1000)
+        //await page.waitForSelector('h1')
+        
+
+       
+       
         
 
 
@@ -43,9 +48,11 @@ describe('My First Puppeteer Test', ()  => {
         //await page.waitForSelector('#signin_button')
         //await page.click('#signin_button')
         await click(page, '#signin_button')
+
+        await shouldNotExist(page, '#signin_button')
         
         //await page.waitForResponse(() => !document.querySelector('#signin_button'))
-        await page.waitForSelector('#signin_button', {hidden: true, timeout:3000,})
+        //await page.waitForSelector('#signin_button', {hidden: true, timeout:3000,})
         
     })
 })
